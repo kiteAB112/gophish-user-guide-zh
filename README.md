@@ -1,21 +1,36 @@
-# GoPhish 本地文档站
+# GoPhish User Guide 中文翻译
 
-此目录是独立的 VitePress 站点。`content/en` 是已适配 VitePress 的 GoPhish 英文指南副本，包含本地图片资源，不依赖项目根目录的 `user-guide` GitBook 仓库。
+这是一个基于 VitePress 的 GoPhish User Guide 阅读站点，包含：
 
-上游仓库仅可作为后续人工比对资料；若要同步更新，请将确认过的变更合并到本目录的英文副本。
+- `content/en`：适配 VitePress 的英文原文副本；
+- `content/zh`：中文译文；
+- 本地化图片资源，便于离线浏览与维护。
 
-## 本地运行
+## 内容来源与说明
 
-```powershell
-& H:\envs\Nodejs-24.16.0\npm.cmd run docs:dev
+英文原文来自 [gophish/user-guide](https://github.com/gophish/user-guide)，其 README 标注的文档版本为 v0.10.1。GoPhish 当前版本及行为请以[官方发布页](https://github.com/gophish/gophish/releases)和实际部署版本为准。
+
+本仓库是非官方的文档适配与中文翻译项目，不隶属于 GoPhish 项目。原文版权及许可证信息见 [`content/en/license.md`](content/en/license.md)。
+
+## 本地预览
+
+需要 Node.js 20 或更高版本。
+
+```bash
+npm install
+npm run docs:dev
 ```
 
-打开 <http://127.0.0.1:5173>。
+随后打开终端显示的本地地址（默认是 `http://127.0.0.1:5173`）。
 
-## 构建静态站点
+## 构建
 
-```powershell
-& H:\envs\Nodejs-24.16.0\npm.cmd run docs:build
+```bash
+npm run docs:build
 ```
 
-输出目录为 `.vitepress/dist`。部署前需另行确认访问控制与变更范围。
+静态站点输出到 `.vitepress/dist`。
+
+## 使用边界
+
+GoPhish 应仅用于已获授权、范围明确的安全意识演练或渗透测试。请遵守适用法律、组织政策和数据最小化原则。
