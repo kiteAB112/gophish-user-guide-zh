@@ -11,6 +11,41 @@ One of the major benefits of having written gophish in the Go programming langua
 To install gophish, simply run `go get github.com/gophish/gophish`. This downloads gophish into your `$GOPATH`.  
 Next, navigate to `$GOPATH/src/github.com/gophish/gophish` and run the command `go build`. This builds a gophish binary in the current directory.
 
+## Running Gophish with Docker
+
+::: info
+This is a maintenance note added by this translation project. The upstream user guide predates Docker deployment guidance. The [official repository](https://github.com/gophish/gophish) includes a `Dockerfile`, and its README links to the official [`gophish/gophish`](https://hub.docker.com/r/gophish/gophish) image.
+:::
+
+For an authorized internal test, pull and start the official image as follows:
+
+```bash
+docker pull gophish/gophish
+docker run -d --name gophish \
+  --restart unless-stopped \
+  -p 127.0.0.1:3333:3333 \
+  -p 80:80 \
+  gophish/gophish
+```
+
+The first mapping keeps the administration interface reachable only from the Docker host. The second publishes the campaign web server; only expose it when the approved exercise scope requires it. Do not publish the administration port to the Internet.
+
+### Remote Administration on a Cloud Host
+
+If the administration interface must be reached remotely from an approved VPN or fixed office egress IP, replace `-p 127.0.0.1:3333:3333` with `-p 3333:3333`:
+
+```bash
+docker run -d --name gophish \
+  --restart unless-stopped \
+  -p 3333:3333 \
+  -p 80:80 \
+  gophish/gophish
+```
+
+This only makes the port available on the host network; it does not make unrestricted public access appropriate. Before starting the container, restrict TCP/3333 in the cloud security group and host firewall to the approved VPN or fixed source addresses, use TLS, and change the initial administrator password. Keep the administration interface separate from the public campaign service.
+
+The official Docker Hub image was last updated several years ago when this note was written. Review its tag, digest, and release compatibility before production use; when a newer revision is required, build and test the official source at the revision you have selected instead. Treat the container's configuration and SQLite data as persistent deployment data and back them up before replacing or removing a container.
+
 ## Understanding the `config.json`
 
 There are some settings that are configurable via a file called config.json, located in the gophish root directory. Here are some of the options that you can set to your preferences:
@@ -132,4 +167,3 @@ To run Gophish as a service in Linux distributions, you will need to setup a ser
 ### Windows
 
 To run Gophish as a service in Windows, you can use [nssm](http://nssm.cc/).
-
