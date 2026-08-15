@@ -70,6 +70,7 @@ const englishSidebar = [
 
 export default defineConfig({
   srcDir: 'content',
+  base: '/gophish-user-guide-zh/',
   title: 'GoPhish 本地文档',
   description: 'GoPhish 官方 User Guide 与内部实操笔记',
   cleanUrls: true,
