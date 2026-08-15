@@ -8,6 +8,43 @@ GoPhish 为大多数操作系统提供[预构建二进制文件](https://github.
 
 GoPhish 使用 Go 语言编写，因此从源代码构建很简单。需要安装 Go 语言和 C 编译器（例如 `gcc`）。运行 `go get github.com/gophish/gophish` 将 GoPhish 下载至 `$GOPATH`；随后进入 `$GOPATH/src/github.com/gophish/gophish` 并运行 `go build`，即可在当前目录生成二进制文件。
 
+## 使用 Docker 运行 GoPhish
+
+::: info
+
+本节是本翻译项目补充的维护说明：上游 User Guide 早于 Docker 部署说明。官方 [GitHub 仓库](https://github.com/gophish/gophish)保留了 `Dockerfile`，其 README 也链接到官方 [`gophish/gophish`](https://hub.docker.com/r/gophish/gophish) 镜像。
+
+:::
+
+在已获授权的内部测试中，可先拉取并启动官方镜像：
+
+```bash
+docker pull gophish/gophish
+docker run -d --name gophish \
+  --restart unless-stopped \
+  -p 127.0.0.1:3333:3333 \
+  -p 80:80 \
+  gophish/gophish
+```
+
+第一个端口映射会使管理端仅能从 Docker 宿主机访问；第二个映射用于演练页面服务，只有在获批范围确有需要时才应开放。不要将管理端口直接暴露到互联网。
+
+### 云服务器上的远程管理
+
+若需从已获准的 VPN 或固定办公出口远程访问管理端，可将 `-p 127.0.0.1:3333:3333` 改为 `-p 3333:3333`：
+
+```bash
+docker run -d --name gophish \
+  --restart unless-stopped \
+  -p 3333:3333 \
+  -p 80:80 \
+  gophish/gophish
+```
+
+这只会让端口在宿主机网络上监听，并不意味着适合无差别对公网开放。启动容器前，应在云安全组和主机防火墙中将 TCP/3333 限制为获准 VPN 或固定来源地址，启用 TLS，并修改初始管理员密码。管理界面应与面向员工的演练页面服务保持隔离。
+
+写下本说明时，官方 Docker Hub 镜像已多年未更新。用于生产前，应核对镜像标签、摘要与目标版本的兼容性；如需较新的版本，应从已选定版本的官方源码构建并完成测试。容器中的配置和 SQLite 数据属于需要持久保存的部署数据，在替换或删除容器前应先备份。
+
 ## 了解 `config.json`
 
 GoPhish 根目录中的 `config.json` 用于配置服务。常见选项如下：
